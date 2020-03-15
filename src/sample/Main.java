@@ -28,9 +28,21 @@ public class Main extends Application {
     private static final int W = 8;
     private static final int H = 8;
     private static final int SIZE = 100;
+    private static final int GEM_SIZE = 80;
 
     private Color[] colors = new Color[] {
             Color.RED, Color.ORANGE, Color.BLUE, Color.GREEN, Color.YELLOW, Color.GRAY, Color.PURPLE
+    };
+    Image redGem = new Image("file:assets/red.png");
+    Image blueGem = new Image("file:assets/blue.png");
+    Image greenGem = new Image("file:assets/green.png");
+    Image yellowGem = new Image("file:assets/yellow.png");
+    Image orangeGem = new Image("file:assets/orange.png");
+    Image whiteGem = new Image("file:assets/white.png");
+    Image purpleGem = new Image("file:assets/purple.png");
+
+    private Image[] gems = new Image[]{
+            redGem, blueGem, greenGem, yellowGem, orangeGem, whiteGem, purpleGem
     };
 
     private Jewel selected = null;
@@ -39,7 +51,7 @@ public class Main extends Application {
 
     private IntegerProperty score = new SimpleIntegerProperty();
 
-    Image image = new Image("file:assets/red.png ");
+
 
     private Parent createContent(){
         Pane root = new Pane();
@@ -59,15 +71,10 @@ public class Main extends Application {
         textScore.textProperty().bind(score.asString("Score: [%d]"));
 
         root.getChildren().add(textScore);
-
-        ImageView iv = new ImageView();
-        iv.setImage(image);
-        iv.setFitHeight(SIZE);
-        iv.setFitWidth(SIZE);
-        root.getChildren().add(iv);
-        ;        return root;
+        return root;
     }
 
+    //this is basically all the logic that this game has
     private void checkState(){
         Map<Integer, List<Jewel>> rows =  jewels.stream().collect(Collectors.groupingBy(Jewel::getRow));
         Map<Integer, List<Jewel>> columns =  jewels.stream().collect(Collectors.groupingBy(Jewel::getColumn));
@@ -90,7 +97,7 @@ public class Main extends Application {
     }
 
     private void swap(Jewel a, Jewel b){
-        Paint color = a.getColor();
+        Image color = a.getColor();
         a.setColor(b.getColor());
         b.setColor(color);
     }
@@ -106,17 +113,16 @@ public class Main extends Application {
 
 
     private class Jewel extends Parent{
-        private Circle circle = new Circle(SIZE/2);
+        ImageView gem = new ImageView();
 
         public Jewel(Point2D point){
-//            Circle circle = new Circle(SIZE/2);
-            circle.setCenterX(SIZE/2);
-            circle.setCenterY(SIZE/2);
-            circle.setFill(colors[new Random().nextInt(colors.length)]);
+            gem.setImage(gems[new Random().nextInt(gems.length)]);
+            gem.setFitWidth(GEM_SIZE);
+            gem.setFitHeight(GEM_SIZE);
 
             setTranslateX(point.getX() * SIZE);
             setTranslateY(point.getY() * SIZE);
-            getChildren().add(circle);
+            getChildren().add(gem);
 
             setOnMouseClicked( event -> {
                 if (selected == null) {
@@ -131,7 +137,7 @@ public class Main extends Application {
         }
 
         public void randomize(){
-            circle.setFill(colors[new Random().nextInt(colors.length)]);
+            gem.setImage(gems[new Random().nextInt(gems.length)]);
         }
 
         public int getColumn(){
@@ -142,12 +148,14 @@ public class Main extends Application {
             return (int)getTranslateY() / SIZE;
         }
 
-        public Paint getColor() {
-            return this.circle.getFill();
+        public Image getColor() {
+
+            return this.gem.getImage();
         }
 
-        public void setColor(Paint color){
-            this.circle.setFill(color);
+        public void setColor(Image color){
+
+            this.gem.setImage(color);
         }
     }
 
