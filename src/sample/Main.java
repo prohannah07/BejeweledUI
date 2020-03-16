@@ -52,7 +52,6 @@ public class Main extends Application {
     private IntegerProperty score = new SimpleIntegerProperty();
 
 
-
     private Parent createContent(){
         Pane root = new Pane();
         root.setPrefSize(W*SIZE + 500, H*SIZE);
@@ -114,8 +113,9 @@ public class Main extends Application {
 
     private class Jewel extends Parent{
         ImageView gem = new ImageView();
-
+        Point2D point;
         public Jewel(Point2D point){
+            this.point = point;
             gem.setImage(gems[new Random().nextInt(gems.length)]);
             gem.setFitWidth(GEM_SIZE);
             gem.setFitHeight(GEM_SIZE);
